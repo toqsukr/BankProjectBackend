@@ -1,73 +1,68 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Банковское приложение на Nest.js
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Это бэкенд-часть банковского приложения, разработанного с использованием React.js:
+[https://github.com/toqsukr/BankProject](https://github.com/toqsukr/BankProject)
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+Это приложение предоставляет API для управления банковскими аккаунтами, транзакциями и другими банковскими операциями.
 
-## Description
+## Требования
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Для запуска и развертывания этого приложения вам понадобятся следующие компоненты:
 
-## Installation
+- Node.js
+- npm (Node Package Manager)
+- MongoDB (или другая база данных, настраивается в зависимости от вашей конфигурации)
+
+## Установка
+
+1. Клонируйте репозиторий:
+
+   ```bash
+   git clone https://github.com/your/repository.git
+   ```
+
+2. Перейдите в директорию проекта:
+
+   ```bash
+   cd your-project-folder
+   ```
+
+3. Установите зависимости:
+
+   ```bash
+   npm install
+   ```
+
+## Настройка
+
+1. Создайте файл конфигурации `.env` в корневой директории проекта и настройте следующие переменные окружения:
+
+   ```env
+   PORT=3000
+   DATABASE_URI=mongodb://localhost:27017/bank_app
+   JWT_SECRET=your-secret-key
+   ```
+
+   - `PORT`: Порт, на котором будет запущен сервер.
+   - `DATABASE_URI`: URI для подключения к вашей базе данных.
+   - `JWT_SECRET`: Секретный ключ для создания и проверки JSON Web Tokens.
+
+2. Настройте другие параметры, такие как CORS, маршруты и контроллеры в файле `src/main.ts`.
+
+## Запуск
+
+Запустите бэкенд-сервер с помощью следующей команды:
 
 ```bash
-$ npm install
+npm run start
 ```
 
-## Running the app
+Приложение будет доступно по адресу `http://localhost:3000` (или другому порту, который вы указали в конфигурации).
 
-```bash
-# development
-$ npm run start
+## Использование
 
-# watch mode
-$ npm run start:dev
+Вы можете взаимодействовать с бэкенд-частью приложения, отправляя HTTP-запросы. Документация API доступна на эндпоинте `/api/docs`.
 
-# production mode
-$ npm run start:prod
-```
+## Развертывание
 
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+Для развертывания вашего приложения в производственной среде, вы можете использовать различные платформы хостинга, такие как Heroku, AWS, или другие. Не забудьте настроить переменные окружения в своем хостинге для безопасного хранения конфиденциальной информации.
