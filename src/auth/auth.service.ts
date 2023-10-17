@@ -1,24 +1,46 @@
 import { Injectable } from '@nestjs/common'
+import { User } from '@prisma/client'
+import { Decimal } from '@prisma/client/runtime/library'
+import jwt from 'jsonwebtoken'
 import { PrismaService } from 'src/prisma.service'
+import { v4 as uuidv4 } from 'uuid'
 import { LoginDto, RegisterDto } from './auth.dto'
 
 @Injectable()
 export class AuthService {
-  constructor(prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
+
+  async createUser(data: User): Promise<User> {
+    return await this.prisma.user.create({ data })
+  }
+
+  createAccessToken(payload: LoginDto): string {
+    const generateSecretKey = (length: number): string => {
+      const crypto = require('crypto')
+      const byteLength = length / 2
+      const secretKey = crypto.randomBytes(byteLength)
+      const secretKeyHex: string = secretKey.toString('hex')
+      return secretKeyHex
+    }
+    const accessToken: string = jwt.sign(payload, generateSecretKey(32), {
+      expiresIn: '1h',
+    })
+    return accessToken
+  }
 
   login(loginDto: LoginDto) {
-    return 'This action adds a new auth'
+    return this.createAccessToken(loginDto)
   }
 
   register(registerDto: RegisterDto) {
-    return 'This action adds a new auth'
+    const id = uuidv4()
+    const { password, ...userData } = registerDto
+    const accessToken = this.createAccessToken({ email: userData.email, password })
+    this.createUser({ id, balance: new Decimal(0), ...userData })
+    return accessToken
   }
 
   getAll() {
     return `This action returns all auth`
-  }
-
-  getByID(id: number) {
-    return `This action returns a #${id} auth`
   }
 }
