@@ -33,6 +33,6 @@ export const isValidEmail = (email: string) => {
 }
 
 export const isValidPhoneNumber = (phoneNumber: string) => {
-  const phoneRegex = /^\+\d{1,3}\s\d{3}\s\d{3}-\d{2}-\d{2}$/
+  const phoneRegex = /^(\+\d{1,2} )?(\d{1} )?\d{3} \d{3}-\d{2}-\d{2}$/
   return phoneRegex.test(phoneNumber)
 }
