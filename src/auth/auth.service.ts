@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common'
 import { User } from '@prisma/client'
 import { Decimal } from '@prisma/client/runtime/library'
-import jwt from 'jsonwebtoken'
+import { sign } from 'jsonwebtoken'
 import { PrismaService } from 'src/prisma.service'
 import { v4 as uuidv4 } from 'uuid'
 import { LoginDto, RegisterDto } from './auth.dto'
@@ -22,7 +22,7 @@ export class AuthService {
       const secretKeyHex: string = secretKey.toString('hex')
       return secretKeyHex
     }
-    const accessToken: string = jwt.sign(payload, generateSecretKey(32), {
+    const accessToken: string = sign(payload, generateSecretKey(32), {
       expiresIn: '1h',
     })
     return accessToken
@@ -34,10 +34,16 @@ export class AuthService {
 
   register(registerDto: RegisterDto) {
     const id = uuidv4()
-    const { password, ...userData } = registerDto
+    const { password, dateOfBirth: dateOfBirthString, ...userData } = registerDto
     const accessToken = this.createAccessToken({ email: userData.email, password })
-    this.createUser({ id, balance: new Decimal(0), ...userData })
-    return accessToken
+    const dateOfBirth = new Date(dateOfBirthString)
+    this.createUser({
+      id,
+      balance: new Decimal(0),
+      dateOfBirth,
+      ...userData,
+    })
+    return { accessToken }
   }
 
   getAll() {
