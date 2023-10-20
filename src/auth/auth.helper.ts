@@ -27,11 +27,6 @@ export const isValidBirthDate = (value: string) => {
   return true
 }
 
-export const isValidEmail = (email: string) => {
-  const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i
-  return emailRegex.test(email)
-}
-
 export const isValidPhoneNumber = (phoneNumber: string) => {
   const phoneRegex = /^(\+\d{1,2} )?(\d{1} )?\d{3} \d{3}-\d{2}-\d{2}$/
   return phoneRegex.test(phoneNumber)

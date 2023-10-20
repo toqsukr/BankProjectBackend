@@ -5,7 +5,7 @@ export class LoginDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
-  email: string
+  phone: string
 
   @IsString()
   @IsNotEmpty()
@@ -28,9 +28,4 @@ export class RegisterDto extends LoginDto {
   @IsNotEmpty()
   @ApiProperty()
   dateOfBirth: string
-
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  phone: string
 }

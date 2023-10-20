@@ -5,7 +5,7 @@ import { compare, hash } from 'bcrypt'
 import { sign } from 'jsonwebtoken'
 import { PrismaService } from 'src/prisma.service'
 import { LoginDto, RegisterDto } from './auth.dto'
-import { isValidBirthDate, isValidEmail, isValidPhoneNumber } from './auth.helper'
+import { isValidBirthDate, isValidPhoneNumber } from './auth.helper'
 
 @Injectable()
 export class AuthService {
@@ -32,11 +32,11 @@ export class AuthService {
   }
 
   async login(loginDto: LoginDto) {
-    if (!isValidEmail(loginDto.email))
-      throw new HttpException('Incorrect email format', HttpStatus.BAD_REQUEST)
+    if (!isValidPhoneNumber(loginDto.phone))
+      throw new HttpException('Incorrect phone number format', HttpStatus.BAD_REQUEST)
 
     const userData = await this.prisma.user.findUnique({
-      where: { email: loginDto.email },
+      where: { phone: loginDto.phone },
     })
     if (!userData) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
     const compareResult = await compare(loginDto.password, userData.password)
@@ -48,14 +48,12 @@ export class AuthService {
   async register(registerDto: RegisterDto) {
     if (!isValidBirthDate(registerDto.dateOfBirth))
       throw new HttpException('Incorrect date format', HttpStatus.BAD_REQUEST)
-    if (!isValidEmail(registerDto.email))
-      throw new HttpException('Incorrect email format', HttpStatus.BAD_REQUEST)
     if (!isValidPhoneNumber(registerDto.phone))
       throw new HttpException('Incorrect phone number format', HttpStatus.BAD_REQUEST)
 
     try {
       const { password, dateOfBirth: dateOfBirthString, ...userData } = registerDto
-      const accessToken = this.createAccessToken({ email: userData.email, password })
+      const accessToken = this.createAccessToken({ phone: userData.phone, password })
       const [day, month, year] = dateOfBirthString.split('.').map(Number)
       const dateOfBirth = new Date(year, month - 1, day)
       const hashedPassword = await hash(password, this.saltRounds)

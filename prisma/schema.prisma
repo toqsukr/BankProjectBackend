@@ -8,11 +8,10 @@ datasource db {
 }
 
 model User {
-  email       String   @id @unique
+  phone       String   @id @unique
   password    String
   name        String
   surname     String
   balance     Decimal  @default(0)
   dateOfBirth DateTime
-  phone       String   @unique
 }
