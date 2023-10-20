@@ -13,8 +13,9 @@ export class UserService {
     const userData = await this.prisma.user.findUnique({
       where: { phone: userDto.phone },
     })
-    const { name, surname, dateOfBirth, balance } = userData
+    if (!userData) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    const { phone, name, surname, dateOfBirth, balance } = userData
     const dateOfBirthString = dateOfBirth.toDateString()
-    return { name, surname, dateOfBirthString, balance }
+    return { name, surname, phone, dateOfBirth: dateOfBirthString, balance }
   }
 }

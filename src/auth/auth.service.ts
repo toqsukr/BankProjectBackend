@@ -42,7 +42,10 @@ export class AuthService {
     const compareResult = await compare(loginDto.password, userData.password)
     if (!compareResult)
       throw new HttpException('Incorrect email or password', HttpStatus.UNAUTHORIZED)
-    return { accessToken: this.createAccessToken(loginDto) }
+    const accessToken = this.createAccessToken(loginDto)
+    const { name, surname, phone, dateOfBirth, balance } = userData
+    const user = { name, surname, phone, dateOfBirth, balance }
+    return { user, accessToken }
   }
 
   async register(registerDto: RegisterDto) {
@@ -57,13 +60,16 @@ export class AuthService {
       const [day, month, year] = dateOfBirthString.split('.').map(Number)
       const dateOfBirth = new Date(year, month - 1, day)
       const hashedPassword = await hash(password, this.saltRounds)
-      this.createUser({
-        password: hashedPassword,
+      const user = {
         balance: new Decimal(0),
         dateOfBirth,
         ...userData,
+      }
+      await this.createUser({
+        password: hashedPassword,
+        ...user,
       })
-      return { accessToken }
+      return { user, accessToken }
     } catch (error) {
       console.error(error)
       throw new HttpException('Iternal server error', HttpStatus.INTERNAL_SERVER_ERROR)
