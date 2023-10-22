@@ -41,6 +41,15 @@ export class UserService {
     })
   }
 
+  async bindContactUser(contactPhone: string, userPhone: string) {
+    return this.prisma.contactToUser.create({
+      data: {
+        contactPhone,
+        userPhone,
+      },
+    })
+  }
+
   async getUser(userDto: UserDto) {
     if (!isValidPhoneNumber(userDto.phone))
       throw new HttpException('Incorrect phone number format', HttpStatus.BAD_REQUEST)
@@ -130,27 +139,36 @@ export class UserService {
       where: { phone: contactDto.userPhone },
     })
     if (!userData) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+
+    const existContact = await this.prisma.contact.findUnique({
+      where: {
+        phone: contactDto.phone,
+      },
+    })
+
     try {
       const { name, surname, image, phone, userPhone } = contactDto
-      const createdContact = await this.prisma.contact.create({
-        data: {
-          name,
-          surname,
-          image,
-          phone,
-          userPhone,
-        },
-      })
+      if (!existContact) {
+        await this.prisma.contact.create({
+          data: {
+            name,
+            surname,
+            image,
+            phone,
+          },
+        })
+        await this.prisma.contactToUser.create({
+          data: {
+            contactPhone: existContact.phone,
+            userPhone: userData.phone,
+          },
+        })
+      }
 
-      await this.prisma.contactToUser.create({
-        data: {
-          contactPhone: createdContact.phone,
-          userPhone,
-        },
-      })
+      await this.bindContactUser(contactDto.phone, userData.phone)
 
-      const userData = await this.getUserContacts(userPhone)
-      const flatContacts = userData.contacts.map(contact => ({
+      const userContactData = await this.getUserContacts(userPhone)
+      const flatContacts = userContactData.contacts.map(contact => ({
         name: contact.contact.name,
         surname: contact.contact.surname,
         image: contact.contact.image,

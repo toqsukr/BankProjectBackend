@@ -36,10 +36,9 @@ model ContactToUser {
 }
 
 model Contact {
-  phone     String          @id @unique
-  name      String
-  surname   String
-  image     String          @default("")
-  userPhone String
-  users     ContactToUser[]
+  phone   String          @id @unique
+  name    String
+  surname String
+  image   String          @default("")
+  users   ContactToUser[]
 }
