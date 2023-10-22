@@ -8,10 +8,38 @@ datasource db {
 }
 
 model User {
-  phone       String   @id @unique
+  phone       String          @id @unique
   password    String
   name        String
   surname     String
-  balance     Decimal  @default(0)
+  balance     Decimal         @default(0)
   dateOfBirth DateTime
+  image       String          @default("")
+  cards       Card[]
+  contacts    ContactToUser[]
+}
+
+model Card {
+  cardNumber String @id @unique
+  expires    String
+  code       String
+  userPhone  String
+  owner      User   @relation(fields: [userPhone], references: [phone])
+}
+
+model ContactToUser {
+  id           Int     @id @default(autoincrement())
+  contactPhone String
+  userPhone    String
+  contact      Contact @relation(fields: [contactPhone], references: [phone])
+  user         User    @relation(fields: [userPhone], references: [phone])
+}
+
+model Contact {
+  phone     String          @id @unique
+  name      String
+  surname   String
+  image     String          @default("")
+  userPhone String
+  users     ContactToUser[]
 }

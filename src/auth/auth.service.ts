@@ -63,6 +63,7 @@ export class AuthService {
       const user = {
         balance: new Decimal(0),
         dateOfBirth,
+        image: '',
         ...userData,
       }
       await this.createUser({
