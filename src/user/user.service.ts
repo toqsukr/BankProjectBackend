@@ -84,6 +84,10 @@ export class UserService {
       where: { phone: cardDto.userPhone },
     })
     if (!userData) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    const existCard = await this.prisma.card.findUnique({
+      where: { cardNumber: cardDto.cardNumber },
+    })
+    if (existCard) throw new HttpException('Card has already exist', HttpStatus.CONFLICT)
     try {
       const { cardNumber, expires, code, userPhone } = cardDto
       await this.prisma.card.create({
