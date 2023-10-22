@@ -43,8 +43,8 @@ export class AuthService {
     if (!compareResult)
       throw new HttpException('Incorrect email or password', HttpStatus.UNAUTHORIZED)
     const accessToken = this.createAccessToken(loginDto)
-    const { name, surname, phone, dateOfBirth, balance } = userData
-    const user = { name, surname, phone, dateOfBirth, balance }
+    const { name, surname, phone, dateOfBirth, balance, image } = userData
+    const user = { name, surname, phone, dateOfBirth, balance, image }
     return { user, accessToken }
   }
 

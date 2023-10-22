@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
 import { isValidPhoneNumber } from 'src/auth/auth.helper'
 import { PrismaService } from 'src/prisma.service'
-import { CardDto, ContactDto, UserDto } from './user.dto'
+import { CardDto, ContactDto, UserDto, UserImageDto } from './user.dto'
 
 @Injectable()
 export class UserService {
@@ -48,9 +48,25 @@ export class UserService {
       where: { phone: userDto.phone },
     })
     if (!userData) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-    const { phone, name, surname, dateOfBirth, balance } = userData
+    const { phone, name, surname, dateOfBirth, balance, image } = userData
     const dateOfBirthString = dateOfBirth.toDateString()
-    return { name, surname, phone, dateOfBirth: dateOfBirthString, balance }
+    return { name, surname, phone, dateOfBirth: dateOfBirthString, balance, image }
+  }
+
+  async setUserImage(userImageDto: UserImageDto) {
+    if (!isValidPhoneNumber(userImageDto.phone))
+      throw new HttpException('Incorrect phone number format', HttpStatus.BAD_REQUEST)
+    const userData = await this.prisma.user.findUnique({
+      where: { phone: userImageDto.phone },
+    })
+    if (!userData) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    const updatedUser = await this.prisma.user.update({
+      where: { phone: userData.phone },
+      data: {
+        image: userImageDto.image,
+      },
+    })
+    return { user: updatedUser }
   }
 
   async getCards(userDto: UserDto) {

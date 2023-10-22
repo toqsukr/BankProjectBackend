@@ -8,6 +8,13 @@ export class UserDto {
   phone: string
 }
 
+export class UserImageDto extends UserDto {
+  @IsString()
+  @IsNotEmpty()
+  @ApiProperty()
+  image: string
+}
+
 export class CardDto {
   @IsString()
   @IsNotEmpty()
@@ -30,12 +37,7 @@ export class CardDto {
   userPhone: string
 }
 
-export class ContactDto {
-  @IsString()
-  @IsNotEmpty()
-  @ApiProperty()
-  phone: string
-
+export class ContactDto extends UserDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
