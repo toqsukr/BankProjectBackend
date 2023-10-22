@@ -107,7 +107,12 @@ export class UserService {
       throw new HttpException('Incorrect phone number format', HttpStatus.BAD_REQUEST)
     const userData = await this.getUserContacts(userDto.phone)
     if (!userData) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-    return JSON.stringify(userData.contacts)
+    const flatContacts = userData.contacts.map(contact => ({
+      name: contact.contact.name,
+      surname: contact.contact.surname,
+      image: contact.contact.image,
+    }))
+    return JSON.stringify(flatContacts)
   }
 
   async appendContact(contactDto: ContactDto) {
@@ -123,7 +128,7 @@ export class UserService {
     if (!userData) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
     try {
       const { name, surname, image, phone, userPhone } = contactDto
-      await this.prisma.contact.create({
+      const createdContact = await this.prisma.contact.create({
         data: {
           name,
           surname,
@@ -132,8 +137,21 @@ export class UserService {
           userPhone,
         },
       })
+
+      await this.prisma.contactToUser.create({
+        data: {
+          contactPhone: createdContact.phone,
+          userPhone,
+        },
+      })
+
       const userData = await this.getUserContacts(userPhone)
-      return JSON.stringify(userData.contacts)
+      const flatContacts = userData.contacts.map(contact => ({
+        name: contact.contact.name,
+        surname: contact.contact.surname,
+        image: contact.contact.image,
+      }))
+      return JSON.stringify(flatContacts)
     } catch (error) {
       console.error(error)
       throw new HttpException('Iternal server error', HttpStatus.INTERNAL_SERVER_ERROR)
