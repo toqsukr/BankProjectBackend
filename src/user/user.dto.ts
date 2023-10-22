@@ -15,12 +15,14 @@ export class UserImageDto extends UserDto {
   image: string
 }
 
-export class CardDto {
+export class CardIDDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()
   cardNumber: string
+}
 
+export class CardDto extends CardIDDto {
   @IsString()
   @IsNotEmpty()
   @ApiProperty()

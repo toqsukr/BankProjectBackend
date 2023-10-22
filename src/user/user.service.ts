@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common'
-import { isValidPhoneNumber } from 'src/auth/auth.helper'
+import { isValidCardNumber, isValidPhoneNumber } from 'src/auth/auth.helper'
 import { PrismaService } from 'src/prisma.service'
-import { CardDto, ContactDto, UserDto, UserImageDto } from './user.dto'
+import { CardDto, CardIDDto, ContactDto, UserDto, UserImageDto } from './user.dto'
 
 @Injectable()
 export class UserService {
@@ -89,6 +89,8 @@ export class UserService {
   async appendCard(cardDto: CardDto) {
     if (!isValidPhoneNumber(cardDto.userPhone))
       throw new HttpException('Incorrect phone number format', HttpStatus.BAD_REQUEST)
+    if (!isValidCardNumber(cardDto.cardNumber))
+      throw new HttpException('Incorrect card number format', HttpStatus.BAD_REQUEST)
     const userData = await this.prisma.user.findUnique({
       where: { phone: cardDto.userPhone },
     })
@@ -113,6 +115,12 @@ export class UserService {
       console.error(error)
       throw new HttpException('Iternal server error', HttpStatus.INTERNAL_SERVER_ERROR)
     }
+  }
+
+  async deleteCard(cardIDDto: CardIDDto) {
+    if (!isValidCardNumber(cardIDDto.cardNumber))
+      throw new HttpException('Incorrect card number format', HttpStatus.BAD_REQUEST)
+    await this.prisma.card.delete({ where: { cardNumber: cardIDDto.cardNumber } })
   }
 
   async getContacts(userDto: UserDto) {

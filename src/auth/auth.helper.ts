@@ -31,3 +31,8 @@ export const isValidPhoneNumber = (phoneNumber: string) => {
   const phoneRegex = /^(\+\d{1,2} )?(\d{1} )?\d{3} \d{3}-\d{2}-\d{2}$/
   return phoneRegex.test(phoneNumber)
 }
+
+export const isValidCardNumber = (cardNumber: string) => {
+  const cardNumberRegex = /^\d{4} \d{4} \d{4} \d{4}$/
+  return cardNumberRegex.test(cardNumber)
+}

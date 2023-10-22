@@ -1,6 +1,6 @@
-import { Body, Controller, HttpCode, Post, Put } from '@nestjs/common'
+import { Body, Controller, Delete, HttpCode, Post, Put } from '@nestjs/common'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { CardDto, ContactDto, UserDto, UserImageDto } from './user.dto'
+import { CardDto, CardIDDto, ContactDto, UserDto, UserImageDto } from './user.dto'
 import { UserService } from './user.service'
 
 @Controller('user')
@@ -50,6 +50,17 @@ export class UserController {
   @ApiResponse({ status: 500, description: 'Server error' })
   appendCard(@Body() cardDto: CardDto) {
     return this.userService.appendCard(cardDto)
+  }
+
+  @Delete('cards/delete')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Delete card' })
+  @ApiBody({ type: CardIDDto })
+  @ApiResponse({ status: 204, description: 'Card successfully deleted' })
+  @ApiResponse({ status: 400, description: 'Invalid data' })
+  @ApiResponse({ status: 404, description: 'Card not found' })
+  deleteCard(@Body() cardDto: CardIDDto) {
+    return this.userService.deleteCard(cardDto)
   }
 
   @Post('contacts')
